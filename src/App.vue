@@ -7,9 +7,10 @@ const name = ref('')
 const input_content = ref('')
 const input_category = ref(null)
 
-const todos_asc = computed(() => todos.value.sort((a,b) => {
-  return b.createdAt - a.createdAt
-}))
+const todos_asc = computed(() => {
+  return [...todos.value].sort((a, b) => b.createdAt - a.createdAt);
+});
+
 
 const addTodo = () => {
   if (input_content.value.trim() === '' || input_category.value === null) {
@@ -87,25 +88,34 @@ onMounted(() => {
     </form>
   </section>
 
-  <section class="todo-list">
+<section class="todo-list">
   <h3>TODO LIST</h3>
-  <div class="todo" v-for="todo in todos_asc" :class="todo-item `${todo.done && 'done'}`">
-    <label>
-      <input type="checkbox" v-model="todo.done"/>
-       <span class="`bubble ${todo.category}`"></span>
-    </label>
+   <div class="list">
 
-    <div class="content">
-      <input type="text" v-model="todo.content"/>
+<div v-for="todo in todos_asc" :class="['todo-item', { done: todo.done }]">
+
+
+      <label>
+        <input type="checkbox" v-model="todo.done"/>
+        <span :class="['bubble', todo.category]"></span>
+
+      </label>
+
+      <div class="todo-content">
+       
+        <input v-model="todo.content" type="text" />
+       
+       </div>
+       <div class="actions"> 
+        <button class="delete" @click="removeTodo(todo)">Delete</button>
+       </div>
+      
     </div>
 
-    <div class="actions">
-      <button class="delete" @click="removeTodo(todo)">Delete</button>
-    </div>
+
 
   </div>
   </section>
-
 </main>
 
 </template>
